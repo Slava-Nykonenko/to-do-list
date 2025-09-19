@@ -1,4 +1,3 @@
-# Create your views here.
 from typing import Any
 
 from django.http import (

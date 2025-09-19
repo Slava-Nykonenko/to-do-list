@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 class="header-2">
+    {{ task.content }}
+    {% if task.done != 0 %}
+      <span class="badge badge-success">
+        Done
+      </span>
+    {% else %}
+      <span class="badge badge-danger">
+        Not Done
+      </span>
+    {% endif %}
+  </h2>
+  <h6>
+    Created: {{ task.datetime }}
+  </h6>
+  {% if task.deadline %}
+    <h6 class="text-danger">
+      Deadline: {{ task.deadline }}
+    </h6>
+  {% endif %}
+  {% if task.done != 1 %}
+    <a href="{% url 'list:task-changestatus' task.pk %}" class="link-to-page">
+      <button class="btn btn-success">Complete</button>
+    </a>
+  {% else %}
+    <a href="{% url 'list:task-changestatus' task.pk %}" class="link-to-page">
+      <button class="btn btn-warning">Undo</button>
+    </a>
+  {% endif %}
+  <h5 class="mb-1">
+      Tags:
+        {% for tag in task.tags.all %}
+          {{ tag.name }},
+        {% endfor %}
+  </h5>
+  <a href="{% url 'list:task-update' task.id %}" class="link-to-page">
+    <button class="btn btn-primary btn-sm">
+      Update
+    </button>
+  </a>
+  <a href="{% url 'list:task-delete' task.id %}">
+    <button class="btn btn-danger btn-sm">
+      Delete
+    </button>
+  </a>
+{% endblock %}
