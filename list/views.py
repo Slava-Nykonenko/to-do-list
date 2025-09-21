@@ -1,11 +1,18 @@
-from typing import Any
-
-from django.http import HttpResponseRedirect, HttpRequest
-from django.shortcuts import render, get_object_or_404
+from django.http import (
+    HttpResponseRedirect,
+    HttpRequest
+)
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import (
+    generic,
+    View
+)
 
-from list.forms import TaskForm, TagForm
+from list.forms import (
+    TaskForm,
+    TagForm
+)
 from list.models import (
     Task,
     Tag
@@ -67,10 +74,17 @@ class TagDeleteView(generic.DeleteView):
     success_url = reverse_lazy("list:tag-list")
 
 
-def changestatus(request: HttpRequest, pk: int) -> Any | None:
-    task = get_object_or_404(Task, pk=pk)
-    task.done = not task.done
-    task.save()
-    return HttpResponseRedirect(
-        reverse_lazy("list:task-list")
-    )
+class ChangeStatusView(View):
+    def post(
+        self,
+        request: HttpRequest,
+        pk=int
+    ) -> HttpResponseRedirect:
+        task = get_object_or_404(Task, pk=pk)
+        task.done = not task.done
+        task.save()
+        redirect_url = request.POST.get(
+            "next",
+            reverse_lazy("list:task-list")
+        )
+        return HttpResponseRedirect(redirect_url)
