@@ -22,13 +22,21 @@
     </h6>
   {% endif %}
   {% if task.done != 1 %}
-    <a href="{% url 'list:task-changestatus' task.pk %}" class="link-to-page">
-      <button class="btn btn-success">Complete</button>
-    </a>
+    <form method="POST" action="{% url 'list:task-changestatus' task.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'list:task-detail' task.pk %}">
+      <button class="btn btn-success">
+        Complete
+      </button>
+    </form>
   {% else %}
-    <a href="{% url 'list:task-changestatus' task.pk %}" class="link-to-page">
-      <button class="btn btn-warning">Undo</button>
-    </a>
+    <form method="POST" action="{% url 'list:task-changestatus' task.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'list:task-detail' task.pk %}">
+      <button class="btn btn-warning">
+        Undo
+      </button>
+    </form>
   {% endif %}
   <h5 class="mb-1">
       Tags:

@@ -27,13 +27,19 @@
               {% endif %}
             </h5>
             {% if task.done != 1 %}
-              <a href="{% url 'list:task-changestatus' task.pk %}" class="link-to-page">
-                <button class="btn btn-success">Complete</button>
-              </a>
+              <form method="POST" action="{% url 'list:task-changestatus' task.id %}">
+                {% csrf_token %}
+                <button class="btn btn-success">
+                  Complete
+                </button>
+              </form>
             {% else %}
-              <a href="{% url 'list:task-changestatus' task.pk %}" class="link-to-page">
-                <button class="btn btn-warning">Undo</button>
-              </a>
+              <form method="POST" action="{% url 'list:task-changestatus' task.id %}">
+                {% csrf_token %}
+                <button class="btn btn-warning">
+                  Undo
+                </button>
+              </form>
             {% endif %}
           </div>
           <div>
