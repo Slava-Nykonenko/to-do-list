@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    To-Do list
+    <a href="{% url 'list:task-create' %}" class="btn btn-primary link-to-page">
+      Create a Task
+    </a>
+  </h1>
+  {% if task_list %}
+    <div class="list-group">
+      {% for task in task_list %}
+        <div class="list-group-item">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">
+              <a href="{% url 'list:task-detail' task.id %}">
+                {{ task.content }}
+              </a>
+              {% if task.done != 0 %}
+                <span class="badge badge-success">
+                  Done
+                </span>
+              {% else %}
+                <span class="badge badge-danger">
+                  Not Done
+                </span>
+              {% endif %}
+            </h5>
+            {% if task.done != 1 %}
+              <form method="POST" action="{% url 'list:task-changestatus' task.id %}">
+                {% csrf_token %}
+                <button class="btn btn-success">
+                  Complete
+                </button>
+              </form>
+            {% else %}
+              <form method="POST" action="{% url 'list:task-changestatus' task.id %}">
+                {% csrf_token %}
+                <button class="btn btn-warning">
+                  Undo
+                </button>
+              </form>
+            {% endif %}
+          </div>
+          <div>
+            <small class="text-muted">
+              {{ task.datetime | date:'Y-m-d H:m:s' }}
+            </small>
+          </div>
+          {% if task.deadline %}
+            <div>
+              <h6 class="text-danger">
+                Deadline: {{ task.deadline }}
+              </h6>
+            </div>
+          {% endif %}
+          <div class="d-flex w-100">
+            <h5 class="mb-1">
+              Tags:
+                {% for tag in task.tags.all %}
+                  {{ tag.name }},
+                {% endfor %}
+            </h5>
+          </div>
+              <a href="{% url 'list:task-update' task.id %}" class="link-to-page">
+                <button class="btn btn-primary btn-sm">
+                  Update
+                </button>
+              </a>
+              <a href="{% url 'list:task-delete' task.id %}">
+                <button class="btn btn-danger btn-sm">
+                  Delete
+                </button>
+              </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>There are no tasks in the list</p>
+  {% endif %}
+{% endblock %}
